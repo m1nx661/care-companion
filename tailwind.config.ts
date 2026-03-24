@@ -61,6 +61,7 @@ export default {
           user: "hsl(var(--chat-user))",
           bot: "hsl(var(--chat-bot))",
         },
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
