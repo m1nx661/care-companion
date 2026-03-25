@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, Navigation } from "lucide-react";
 
 interface Hospital {
   name: string;
@@ -62,40 +62,42 @@ const NearbyHospitals = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-5">
-      <div className="text-center space-y-2 mb-6">
-        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto text-2xl">🏥</div>
-        <h2 className="text-xl font-semibold text-foreground">Nearby Hospitals</h2>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+    <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      <div className="text-center space-y-3 py-4">
+        <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto">
+          <Navigation className="w-8 h-8 text-primary" />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Nearby Hospitals</h2>
+        <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
           Find hospitals near your current location using GPS.
         </p>
       </div>
 
-      <div className="flex justify-center">
-        <button
-          onClick={findHospitals}
-          disabled={loading}
-          className="px-6 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
-        >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-          {loading ? "Searching..." : "Find Hospitals Near Me"}
-        </button>
-      </div>
+      <button
+        onClick={findHospitals}
+        disabled={loading}
+        className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2.5 hover:opacity-90 transition-all disabled:opacity-60 shadow-md"
+      >
+        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
+        {loading ? "Searching..." : "Find Hospitals Near Me"}
+      </button>
 
       {error && (
-        <p className="text-sm text-destructive text-center p-3 rounded-xl bg-destructive/10 border border-destructive/20">
-          {error}
-        </p>
+        <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 text-center">
+          <p className="text-sm text-destructive font-medium">{error}</p>
+        </div>
       )}
 
       {hospitals.length > 0 && (
         <div className="space-y-3 animate-fade-in">
           {hospitals.map((h, i) => (
-            <div key={i} className="p-4 rounded-xl bg-secondary/50 border border-border flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-sm text-foreground">{h.name}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{h.address}</p>
+            <div key={i} className="p-4 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <MapPin className="w-5 h-5 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-sm text-foreground">{h.name}</p>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{h.address}</p>
               </div>
             </div>
           ))}
@@ -103,7 +105,7 @@ const NearbyHospitals = () => {
       )}
 
       {searched && hospitals.length === 0 && !error && (
-        <p className="text-sm text-muted-foreground text-center">No hospitals found nearby.</p>
+        <p className="text-sm text-muted-foreground text-center py-6">No hospitals found nearby.</p>
       )}
     </div>
   );

@@ -2,21 +2,10 @@ import { useState } from "react";
 import { AlertTriangle, Plus, X, Stethoscope } from "lucide-react";
 
 const PRESET_SYMPTOMS = [
-  "Chest pain",
-  "Fever",
-  "Headache / Migraine",
-  "Shortness of breath",
-  "Joint / Knee pain",
-  "Back pain",
-  "Skin rash / Itching",
-  "Eye pain / Blurred vision",
-  "Ear pain / Hearing loss",
-  "Sore throat / Hoarseness",
-  "Stomach / Abdominal pain",
-  "Nausea / Vomiting",
-  "Anxiety / Depression",
-  "Cough / Cold",
-  "Heart palpitations",
+  "Chest pain", "Fever", "Headache / Migraine", "Shortness of breath",
+  "Joint / Knee pain", "Back pain", "Skin rash / Itching", "Eye pain / Blurred vision",
+  "Ear pain / Hearing loss", "Sore throat / Hoarseness", "Stomach / Abdominal pain",
+  "Nausea / Vomiting", "Anxiety / Depression", "Cough / Cold", "Heart palpitations",
 ];
 
 const DEPARTMENT_MAP: Record<string, { department: string; urgent?: boolean }> = {
@@ -95,21 +84,21 @@ const SymptomChecker = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-5 space-y-6">
+    <div className="flex-1 overflow-y-auto p-5 space-y-5">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
-          <Stethoscope className="w-7 h-7 text-primary" />
+      <div className="text-center space-y-3 py-4">
+        <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto">
+          <Stethoscope className="w-8 h-8 text-primary" />
         </div>
-        <h2 className="text-xl font-semibold text-foreground">Symptom Checker</h2>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+        <h2 className="text-xl font-bold text-foreground">Symptom Checker</h2>
+        <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
           Select your symptoms to get a department recommendation. This is not a medical diagnosis.
         </p>
       </div>
 
       {/* Symptom Chips */}
-      <div>
-        <h3 className="text-sm font-medium text-foreground mb-3">Common Symptoms</h3>
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Common Symptoms</h3>
         <div className="flex flex-wrap gap-2">
           {allSymptoms.map((s) => {
             const isSelected = selected.has(s);
@@ -117,10 +106,10 @@ const SymptomChecker = () => {
               <button
                 key={s}
                 onClick={() => toggleSymptom(s)}
-                className={`px-3 py-1.5 text-xs rounded-full border transition-all font-medium ${
+                className={`px-3.5 py-2 text-xs rounded-2xl border transition-all font-medium ${
                   isSelected
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-card text-foreground border-border hover:border-primary/40 hover:bg-accent/50"
+                    ? "bg-primary text-primary-foreground border-primary shadow-md"
+                    : "bg-background text-foreground border-border hover:border-primary/40 hover:bg-accent/50"
                 }`}
               >
                 {s}
@@ -138,12 +127,12 @@ const SymptomChecker = () => {
           onChange={(e) => setCustomInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addCustom()}
           placeholder="Type a custom symptom..."
-          className="flex-1 px-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm outline-none transition-colors focus:border-primary placeholder:text-muted-foreground"
+          className="flex-1 px-4 py-3 rounded-2xl border border-input bg-background text-foreground text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 placeholder:text-muted-foreground"
         />
         <button
           onClick={addCustom}
           disabled={!customInput.trim()}
-          className="px-4 py-2.5 rounded-xl border border-primary/30 text-primary text-sm font-medium flex items-center gap-1.5 hover:bg-primary/5 transition-colors disabled:opacity-40"
+          className="px-4 py-3 rounded-2xl border border-primary/30 text-primary text-sm font-semibold flex items-center gap-1.5 hover:bg-primary/5 transition-colors disabled:opacity-40"
         >
           <Plus className="w-4 h-4" />
           Add
@@ -151,16 +140,16 @@ const SymptomChecker = () => {
       </div>
 
       {/* Selected Summary */}
-      <div>
-        <h3 className="text-sm font-medium text-foreground mb-2">Selected Symptoms</h3>
-        {selected.size === 0 ? (
-          <p className="text-sm text-muted-foreground italic">None selected yet</p>
-        ) : (
+      {selected.size > 0 && (
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm animate-fade-in">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            Selected ({selected.size})
+          </h3>
           <div className="flex flex-wrap gap-2">
             {Array.from(selected).map((s) => (
               <span
                 key={s}
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs rounded-full bg-secondary text-secondary-foreground font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-2xl bg-secondary text-secondary-foreground font-medium"
               >
                 {s}
                 <button onClick={() => removeSelected(s)} className="hover:text-destructive transition-colors">
@@ -169,14 +158,14 @@ const SymptomChecker = () => {
               </span>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Check Button */}
       <button
         onClick={checkSymptoms}
         disabled={selected.size === 0}
-        className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40"
+        className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-40 shadow-md"
       >
         Check Symptoms
       </button>
@@ -184,25 +173,25 @@ const SymptomChecker = () => {
       {/* Results */}
       {result && (
         <div className="space-y-3 animate-fade-in">
-          <h3 className="text-sm font-medium text-foreground">Recommended Departments</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Recommended Departments</h3>
           {result.departments.map((d) => (
             <div
               key={d.name}
-              className={`p-4 rounded-xl border text-sm ${
+              className={`p-4 rounded-2xl border text-sm shadow-sm ${
                 d.urgent
                   ? "bg-destructive/10 border-destructive/20"
-                  : "bg-secondary/50 border-border"
+                  : "bg-card border-border"
               }`}
             >
-              <p className="font-semibold text-foreground">{d.name}</p>
+              <p className="font-bold text-foreground">{d.name}</p>
               {d.urgent && (
-                <p className="text-destructive text-xs font-medium mt-1">⚠️ Urgent — seek immediate attention</p>
+                <p className="text-destructive text-xs font-semibold mt-1">⚠️ Urgent — seek immediate attention</p>
               )}
             </div>
           ))}
-          <div className="flex items-start gap-2 p-4 rounded-xl bg-muted border border-border">
+          <div className="flex items-start gap-2.5 p-4 rounded-2xl bg-muted border border-border">
             <AlertTriangle className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               This is not a medical diagnosis. Please consult a doctor for proper evaluation and treatment.
             </p>
           </div>
