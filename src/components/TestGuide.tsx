@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, FileText } from "lucide-react";
+import { ChevronDown, CheckCircle2 } from "lucide-react";
 
 const TEST_GUIDES: Record<string, { icon: string; instructions: string[] }> = {
   "Blood Test": {
@@ -63,24 +63,26 @@ const TestGuide = () => {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-5">
-      <div className="text-center space-y-2 mb-6">
-        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto text-2xl">📋</div>
-        <h2 className="text-xl font-semibold text-foreground">Test Preparation Guide</h2>
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+    <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      <div className="text-center space-y-3 py-4">
+        <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto text-2xl">
+          📋
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Test Preparation Guide</h2>
+        <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
           Select a test to view preparation instructions.
         </p>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {Object.entries(TEST_GUIDES).map(([name, guide]) => (
-          <div key={name} className="rounded-xl border border-border overflow-hidden">
+          <div key={name} className="rounded-2xl border border-border overflow-hidden shadow-sm bg-card">
             <button
               onClick={() => setSelected(selected === name ? null : name)}
-              className="w-full px-4 py-3 flex items-center justify-between bg-card hover:bg-secondary/30 transition-colors"
+              className="w-full px-4 py-4 flex items-center justify-between hover:bg-accent/30 transition-colors"
             >
-              <span className="flex items-center gap-3 text-sm font-medium text-foreground">
-                <span className="text-lg">{guide.icon}</span>
+              <span className="flex items-center gap-3 text-sm font-semibold text-foreground">
+                <span className="text-lg w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">{guide.icon}</span>
                 {name}
               </span>
               <ChevronDown
@@ -90,10 +92,10 @@ const TestGuide = () => {
               />
             </button>
             {selected === name && (
-              <div className="px-4 pb-4 pt-2 bg-secondary/20 space-y-2 animate-fade-in">
+              <div className="px-4 pb-4 pt-1 space-y-2.5 animate-fade-in">
                 {guide.instructions.map((inst, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <FileText className="w-3.5 h-3.5 text-primary shrink-0 mt-1" />
+                  <div key={i} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                     <p className="text-sm text-foreground leading-relaxed">{inst}</p>
                   </div>
                 ))}

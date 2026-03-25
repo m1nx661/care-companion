@@ -25,12 +25,12 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
         placeholder="Type your message..."
         disabled={disabled}
-        className="flex-1 px-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm outline-none transition-colors focus:border-primary placeholder:text-muted-foreground"
+        className="flex-1 px-4 py-3 rounded-2xl border border-input bg-background text-foreground text-sm outline-none transition-all focus:border-primary focus:ring-2 focus:ring-ring/20 placeholder:text-muted-foreground"
       />
       <button
         onClick={handleSend}
         disabled={disabled || !value.trim()}
-        className="p-2.5 rounded-xl bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="p-3 rounded-2xl bg-primary text-primary-foreground transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
       >
         <Send className="w-4 h-4" />
       </button>
