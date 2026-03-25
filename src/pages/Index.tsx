@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from "react";
+import { MessageSquare, Stethoscope, MapPin, ClipboardList } from "lucide-react";
 import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
 import TypingIndicator from "@/components/TypingIndicator";
+import SymptomChecker from "@/components/SymptomChecker";
+import NearbyHospitals from "@/components/NearbyHospitals";
+import TestGuide from "@/components/TestGuide";
 import { getResponse, type ChatMessage } from "@/lib/chatSimulator";
 
 const WELCOME_MESSAGE: ChatMessage = {
@@ -17,7 +21,17 @@ const QUICK_ACTIONS = [
   "Where is the emergency department?",
 ];
 
+type Tab = "chat" | "symptoms" | "hospitals" | "tests";
+
+const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
+  { id: "chat", label: "Chat", icon: <MessageSquare className="w-4 h-4" /> },
+  { id: "symptoms", label: "Symptoms", icon: <Stethoscope className="w-4 h-4" /> },
+  { id: "hospitals", label: "Hospitals", icon: <MapPin className="w-4 h-4" /> },
+  { id: "tests", label: "Test Guide", icon: <ClipboardList className="w-4 h-4" /> },
+];
+
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -57,31 +71,57 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Messages */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((msg, i) => (
-            <ChatBubble key={i} role={msg.role} content={msg.content} />
+        {/* Navigation Tabs */}
+        <div className="flex border-b border-border bg-card">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 flex flex-col items-center gap-1 py-2.5 text-xs font-medium transition-colors relative ${
+                activeTab === tab.id
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.icon}
+              {tab.label}
+              {activeTab === tab.id && (
+                <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-full" />
+              )}
+            </button>
           ))}
-          {isTyping && <TypingIndicator />}
-
-          {/* Quick actions */}
-          {showQuickActions && !isTyping && (
-            <div className="flex flex-wrap gap-2 pt-2 animate-fade-in">
-              {QUICK_ACTIONS.map((q) => (
-                <button
-                  key={q}
-                  onClick={() => handleSend(q)}
-                  className="px-3 py-1.5 text-xs rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Input */}
-        <ChatInput onSend={handleSend} disabled={isTyping} />
+        {/* Chat Section */}
+        {activeTab === "chat" && (
+          <>
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+              {messages.map((msg, i) => (
+                <ChatBubble key={i} role={msg.role} content={msg.content} />
+              ))}
+              {isTyping && <TypingIndicator />}
+              {showQuickActions && !isTyping && (
+                <div className="flex flex-wrap gap-2 pt-2 animate-fade-in">
+                  {QUICK_ACTIONS.map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => handleSend(q)}
+                      className="px-3 py-1.5 text-xs rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <ChatInput onSend={handleSend} disabled={isTyping} />
+          </>
+        )}
+
+        {/* Other Sections */}
+        {activeTab === "symptoms" && <SymptomChecker />}
+        {activeTab === "hospitals" && <NearbyHospitals />}
+        {activeTab === "tests" && <TestGuide />}
       </div>
     </div>
   );
